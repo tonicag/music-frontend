@@ -24,7 +24,7 @@ export default function Page({ children }: { children: ReactNode }) {
       <div className="w-[240px] h-ful bg-gray-100">
         <Sidebar />
       </div>
-      <div className="flex-1 flex-shrink-0">{children}</div>
+      <div className="flex-1 flex-shrink-0 p-4">{children}</div>
     </div>
   );
 }
