@@ -8,6 +8,9 @@ import FormInput from "@/components/form-input";
 import FormWrapper from "@/components/form-wrapper";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { useState } from "react";
+import { login } from "@/stores/auth.store";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -21,6 +24,8 @@ const formSchema = z.object({
 export default function ProfileForm() {
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -30,9 +35,14 @@ export default function ProfileForm() {
     mode: "onSubmit",
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("SUBMIT");
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
+    const isLoginSuccesful = await login(values);
+    setLoading(false);
+
+    if (isLoginSuccesful) {
+      router.push("/dashboard");
+    }
   }
 
   return (
@@ -51,9 +61,12 @@ export default function ProfileForm() {
           name={"password"}
           placeholder="Enter password"
           label="Password"
+          inputType="password"
         />
         <div className="w-full flex justify-between">
-          <Button type="submit">Log In</Button>
+          <Button type="submit" loading={loading} disabled={loading}>
+            Log In
+          </Button>
           <Button
             variant={"outline"}
             type="button"

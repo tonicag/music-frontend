@@ -57,13 +57,11 @@ export default function RegisterForm() {
     try {
       const data = await axiosInstance.post("/auth/register", values, {});
       toast({ title: "Succesfully created!", variant: "default" });
+      router.push("/login");
     } catch (e) {
-      console.log({ e });
       toast({ title: "Error in creating user!", variant: "destructive" });
     }
     setLoading(false);
-
-    console.log({ values });
   }
 
   return (
