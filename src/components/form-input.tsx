@@ -16,6 +16,7 @@ export type FormInputProps<T> = {
   label?: string;
   description?: string;
   className?: string;
+  inputType?: string;
 };
 export default function FormInput<T extends FieldValues>({
   name,
@@ -23,6 +24,7 @@ export default function FormInput<T extends FieldValues>({
   placeholder,
   description,
   className,
+  inputType,
 }: FormInputProps<T>) {
   const { control } = useFormContext<T>();
 
@@ -35,6 +37,7 @@ export default function FormInput<T extends FieldValues>({
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
             <Input
+              type={inputType || "text"}
               placeholder={placeholder}
               {...field}
               className={cn("", className)}
