@@ -4,4 +4,5 @@ export type Song = {
   id: number;
   name: string;
   artist: Artist;
+  duration: number;
 };

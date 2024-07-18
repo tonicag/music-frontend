@@ -14,14 +14,14 @@ export default function Sidebar() {
       <div className="flex flex-col gap-2 mt-20">
         <Link
           className="px-4 py-2 flex items-center gap-2 hover:bg-gray-200 rounded-lg text-sm text-gray-500 font-normal"
-          href={"/dashboard"}
+          href={"/dashboard/"}
         >
           <LibraryIcon className="stroke-pink-300" />
           Albums
         </Link>
         <Link
           className="px-4 py-2 flex items-center gap-2 hover:bg-gray-200 rounded-lg text-sm text-gray-500 font-normal"
-          href={"/dashboard"}
+          href={"/dashboard/songs"}
         >
           <MusicIcon className="stroke-pink-300" />
           Songs
