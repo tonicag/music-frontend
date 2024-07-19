@@ -15,19 +15,25 @@ type DataItem = {
 };
 export type SelectComponentProps = {
   data: DataItem[];
-  field: ControllerRenderProps<any>;
+  placeholder?: string;
 } & ComponentProps<typeof Select>;
-export default function SelectComponent({ field, data }: SelectComponentProps) {
+export default function SelectComponent({
+  data,
+  placeholder,
+  ...restProps
+}: SelectComponentProps) {
   return (
-    <Select onValueChange={field.onChange} defaultValue={field.value}>
+    <Select {...restProps}>
       <FormControl>
         <SelectTrigger>
-          <SelectValue placeholder="Select a verified email to display" />
+          <SelectValue
+            placeholder={placeholder || "Select a verified email to display"}
+          />
         </SelectTrigger>
       </FormControl>
       <SelectContent>
         {data.map((d) => (
-          <SelectItem key={d.value} value={d.value}>
+          <SelectItem key={d.value} value={String(d.value)}>
             {d.label}
           </SelectItem>
         ))}

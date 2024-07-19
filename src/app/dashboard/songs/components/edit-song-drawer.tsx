@@ -1,4 +1,6 @@
-import SongForm from "@/app/dashboard/songs/components/song-form";
+import SongForm, {
+  EditSongFormSchema,
+} from "@/app/dashboard/songs/components/song-form";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -10,8 +12,11 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { toast } from "@/components/ui/use-toast";
 import { Song } from "@/types/song/song-types";
-import { ReactNode } from "react";
+import axios from "axios";
+import { CalendarCheck } from "lucide-react";
+import { ReactNode, useState } from "react";
 
 type EditSongDrawerProps = {
   children?: ReactNode;
@@ -19,8 +24,26 @@ type EditSongDrawerProps = {
 };
 
 export default function EditSongDrawer(props: EditSongDrawerProps) {
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  async function handleSubmit(values: EditSongFormSchema) {
+    try {
+      setLoading(true);
+      const data = await axios.post("http://localhost:8000/songs", {
+        ...values,
+        artistId: values.artistId,
+      });
+      toast({ title: "Song added succesfully!", variant: "default" });
+      setOpen(false);
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <Drawer direction="right">
+    <Drawer direction="right" open={open} onOpenChange={(val) => setOpen(val)}>
       <DrawerTrigger>{props.children}</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
@@ -33,7 +56,16 @@ export default function EditSongDrawer(props: EditSongDrawerProps) {
               : "Enter your song's details."}
           </DrawerDescription>
         </DrawerHeader>
-        <SongForm />
+        <SongForm onSubmit={handleSubmit}>
+          <DrawerFooter className={"flex flex-row justify-center"}>
+            <Button loading={loading} disabled={loading}>
+              Save
+            </Button>
+            <DrawerClose>
+              <Button variant="outline">Cancel</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </SongForm>
       </DrawerContent>
     </Drawer>
   );
