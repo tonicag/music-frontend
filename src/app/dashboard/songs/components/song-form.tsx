@@ -1,3 +1,4 @@
+import { useDrawerTableContext } from "@/app/dashboard/songs/contexts/DrawerTableContextProvider";
 import FormInput from "@/components/form-input";
 import FormWrapper from "@/components/form-wrapper";
 import SelectComponent from "@/components/select-component";
@@ -21,13 +22,12 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export type SongFormProps = {
-  song?: Song;
   children?: ReactNode;
-  onSubmit: (values: EditSongFormSchema) => void;
 };
 
 const formSchema = z
   .object({
+    id: z.number().nullish(),
     name: z.string().min(2, { message: "This field is required!" }),
     duration: z.string().min(1, { message: "This field is required!" }),
     artistId: z
@@ -48,7 +48,9 @@ const formSchema = z
 
 export type EditSongFormSchema = z.infer<typeof formSchema>;
 
-export default function SongForm({ song, children, onSubmit }: SongFormProps) {
+export default function SongForm({ children }: SongFormProps) {
+  const { onSubmit, data: song } = useDrawerTableContext();
+
   const [artists, setArtists] = useState([]);
 
   useEffect(() => {
@@ -59,10 +61,11 @@ export default function SongForm({ song, children, onSubmit }: SongFormProps) {
       );
     });
   }, []);
-
+  console.log({ song });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      id: song?.id || null,
       artistId: String(song?.artist.id || ""),
       duration: String(song?.duration || ""),
       name: song?.name || "",
@@ -76,7 +79,7 @@ export default function SongForm({ song, children, onSubmit }: SongFormProps) {
   return (
     <FormWrapper
       form={form}
-      onSubmit={onSubmit}
+      onSubmit={(values) => onSubmit?.(values)}
       className="p-4 h-full flex flex-col"
     >
       <FormInput name="name" placeholder="Enter name" label="Name" />
@@ -109,7 +112,20 @@ export default function SongForm({ song, children, onSubmit }: SongFormProps) {
           );
         }}
       />
-      <div className="!mt-auto">{children}</div>
+      <div className="!mt-auto">
+        <DrawerFooter className={"flex flex-row justify-center"}>
+          <Button
+            disabled={form.formState.isSubmitting}
+            loading={form.formState.isSubmitting}
+            type="submit"
+          >
+            Save
+          </Button>
+          <DrawerClose>
+            <Button variant="outline">Cancel</Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </div>
     </FormWrapper>
   );
 }
