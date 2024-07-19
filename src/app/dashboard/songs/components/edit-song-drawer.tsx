@@ -1,43 +1,53 @@
-import SongForm, {
-  EditSongFormSchema,
-} from "@/app/dashboard/songs/components/song-form";
 import { useDrawerTableContext } from "@/app/dashboard/songs/contexts/DrawerTableContextProvider";
-import { Button } from "@/components/ui/button";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { toast } from "@/components/ui/use-toast";
-import { Song } from "@/types/song/song-types";
-import axios from "axios";
-import { CalendarCheck } from "lucide-react";
-import { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import { ReactNode } from "react";
 
-type EditSongDrawerProps = {
-  children?: ReactNode;
+export type DrawerConfig = {
+  drawerTitleEdit?: string;
+  drawerTitleCreate?: string;
+  drawerDescriptionEdit?: string;
+  drawerDescriptionCreate?: string;
 };
 
-export default function EditSongDrawer({ ...props }: EditSongDrawerProps) {
+export type GenericTableDrawer = {
+  children?: ReactNode;
+  formComponent?: React.ComponentType<any>;
+  drawerConfig?: DrawerConfig;
+};
+
+export function GenericTableDrawer({
+  formComponent,
+  drawerConfig,
+  ...props
+}: GenericTableDrawer) {
   const { open, setOpen, data } = useDrawerTableContext();
+
+  const FormComponent = formComponent;
   return (
     <Drawer direction="right" open={open} onOpenChange={(val) => setOpen(val)}>
       <DrawerTrigger>{props.children}</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle className="text-pink-500">
-            {data ? "Edit song" : "Add new song"}
+            {data
+              ? drawerConfig?.drawerTitleEdit
+              : drawerConfig?.drawerTitleCreate}
           </DrawerTitle>
           <DrawerDescription>
-            {data ? "Update your song's details" : "Enter your song's details."}
+            {data
+              ? drawerConfig?.drawerDescriptionEdit
+              : drawerConfig?.drawerDescriptionCreate}
           </DrawerDescription>
         </DrawerHeader>
-        <SongForm />
+        {FormComponent && <FormComponent />}
+        {/* <SongForm /> */}
       </DrawerContent>
     </Drawer>
   );

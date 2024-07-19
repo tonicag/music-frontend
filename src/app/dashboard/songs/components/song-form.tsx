@@ -61,7 +61,7 @@ export default function SongForm({ children }: SongFormProps) {
       );
     });
   }, []);
-  console.log({ song });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -71,11 +71,7 @@ export default function SongForm({ children }: SongFormProps) {
       name: song?.name || "",
     },
   });
-  console.log({
-    artistId: song?.artist.id || null,
-    duration: song?.duration || 0,
-    name: song?.name || "",
-  });
+
   return (
     <FormWrapper
       form={form}

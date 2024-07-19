@@ -1,4 +1,5 @@
 "use client";
+import SongForm from "@/app/dashboard/songs/components/song-form";
 import GenericTableWithActions, {
   ColDefExtension,
 } from "@/components/table/generic-table-with-actions";
@@ -75,10 +76,17 @@ export function SongsTable() {
       url={"http://localhost:8000/songs"}
       colDefs={colDefs}
       onDelete={deleteSong}
-      addNewButtonText="Add new song"
       onSubmit={handleSubmit}
+      addNewButtonText="Add new song"
       pageTitle="Songs"
       pageDescription="Manage your songs."
+      formComponent={SongForm}
+      drawerConfig={{
+        drawerDescriptionCreate: "Enter the details of your song!",
+        drawerDescriptionEdit: "Enter the updated details of your song!",
+        drawerTitleCreate: "Add new song",
+        drawerTitleEdit: "Edit your song",
+      }}
     />
   );
 }

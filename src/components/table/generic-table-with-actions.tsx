@@ -1,6 +1,9 @@
 "use client";
 import DeleteDialog from "@/app/dashboard/songs/components/delete-dialog";
-import EditSongDrawer from "@/app/dashboard/songs/components/edit-song-drawer";
+import {
+  DrawerConfig,
+  GenericTableDrawer,
+} from "@/app/dashboard/songs/components/edit-song-drawer";
 import DrawerTableContextProvider from "@/app/dashboard/songs/contexts/DrawerTableContextProvider";
 import { Button } from "@/components/ui/button";
 import { Song } from "@/types/song/song-types";
@@ -25,6 +28,8 @@ export type GenericTableWithActionsProps<T extends Model> = {
   addNewButtonText?: string;
   tableProps?: AgGridReactProps<T>;
   url?: string;
+  formComponent?: React.ComponentType<any>;
+  drawerConfig?: DrawerConfig;
 };
 
 export default function GenericTableWithActions<T extends Model>({
@@ -36,6 +41,8 @@ export default function GenericTableWithActions<T extends Model>({
   pageDescription,
   url,
   addNewButtonText,
+  formComponent,
+  drawerConfig,
 }: GenericTableWithActionsProps<T>) {
   const [rows, setRows] = useState<T[]>([]);
   const gridRef = useRef<AgGridReact>(null);
@@ -148,7 +155,10 @@ export default function GenericTableWithActions<T extends Model>({
             <p>{pageTitle || ""}</p>
             <p className="text-sm text-gray-500">{pageDescription || ""}</p>
           </div>
-          <EditSongDrawer>
+          <GenericTableDrawer
+            formComponent={formComponent}
+            drawerConfig={drawerConfig}
+          >
             <Button
               variant={"outline"}
               size={"sm"}
@@ -157,7 +167,7 @@ export default function GenericTableWithActions<T extends Model>({
               <PlusIcon className="h-4 w-4 mr-2" />
               {addNewButtonText || ""}
             </Button>
-          </EditSongDrawer>
+          </GenericTableDrawer>
         </div>
 
         <div className="flex-1 mt-10">
