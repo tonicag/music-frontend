@@ -1,4 +1,4 @@
-import AlbumsTable from "@/app/dashboard/(albums)/albums-table";
+import { AlbumsTable } from "@/app/dashboard/(albums)/components/albums-table";
 
 export default function AlbumsPage() {
   return (
