@@ -20,6 +20,8 @@ import { toast } from "@/components/ui/use-toast";
 import DrawerTableContextProvider from "@/app/dashboard/songs/contexts/DrawerTableContextProvider";
 import DeleteDialog from "@/app/dashboard/songs/components/delete-dialog";
 
+type ColDefExtension<T> = {};
+
 export default function SongsTable() {
   const [songs, setSongs] = useState<Song[]>([]);
   const gridRef = useRef<AgGridReact>(null);
@@ -50,8 +52,15 @@ export default function SongsTable() {
     } catch (e) {
     } finally {
       setOpen(false);
+      setData(undefined);
     }
   }
+
+  useEffect(() => {
+    if (!open) {
+      setData(undefined);
+    }
+  }, [open]);
 
   async function deleteSong(id: number) {
     try {
