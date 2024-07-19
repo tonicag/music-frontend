@@ -11,6 +11,7 @@ import { Album } from "@/types/album/album-types";
 import { Artist } from "@/types/artist/artist-types";
 import { Song } from "@/types/song/song-types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Music2Icon } from "lucide-react";
 import { ReactNode, useEffect, useState } from "react";
@@ -46,8 +47,18 @@ export default function AlbumForm({ children }: AlbumFormProps) {
   const { onSubmit, data } = useDrawerTableContext();
   const [artists, setArtists] = useState([]);
   const [songs, setSongs] = useState<Song[]>([]);
-
+  const [search, setSearch] = useState("");
   const album = data as Album | undefined;
+
+  async function getSongs(artistId: string, searchKey: string) {
+    if (!artistId) return [];
+
+    const { data } = await axios.get(
+      `http://localhost:8000/songs?limit=1000&filterColumn=artist.id&filterValue=${artistId}&searchKey=${searchKey}`
+    );
+
+    return data?.data?.data || [];
+  }
 
   useEffect(() => {
     axios.get("http://localhost:8000/artists").then(({ data }) => {
@@ -55,11 +66,6 @@ export default function AlbumForm({ children }: AlbumFormProps) {
         data?.data?.data.map((d: Artist) => ({ value: d.id, label: d.name })) ||
           []
       );
-    });
-
-    axios.get("http://localhost:8000/songs?limit=1000").then(({ data }) => {
-      console.log({ data });
-      setSongs(data?.data?.data || []);
     });
   }, []);
 
@@ -73,6 +79,30 @@ export default function AlbumForm({ children }: AlbumFormProps) {
       songs: album?.songs.map((s) => s.id) || [],
     },
   });
+
+  const artistId = form.watch("artist");
+
+  const {
+    data: songsData,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["songs", artistId, search],
+    queryFn: () => getSongs(artistId || "", search),
+  });
+
+  useEffect(() => {
+    if (!artistId) return;
+
+    axios
+      .get(
+        `http://localhost:8000/songs?limit=1000&filterColumn=artist.id&filterValue=${artistId}`
+      )
+      .then(({ data }) => {
+        console.log({ data });
+        setSongs(data?.data?.data || []);
+      });
+  }, [artistId]);
 
   const currentSongs = form.watch("songs");
 
@@ -109,18 +139,32 @@ export default function AlbumForm({ children }: AlbumFormProps) {
                 data={artists}
                 placeholder="Select an artist"
                 defaultValue={String(form.watch("artist") || "")}
-                onValueChange={field.onChange}
+                onValueChange={(val) => {
+                  form.setValue("songs", [], { shouldDirty: true });
+                  field.onChange(val);
+                }}
               />
             );
           }}
         />
-
+        <FormInput
+          name=""
+          label="Search songs"
+          render={(field) => {
+            return (
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.currentTarget.value)}
+              />
+            );
+          }}
+        />
         <FormLabel>Songs</FormLabel>
 
         <div className="min-h-[200px] max-h-[200px] w-full rounded-lg border overflow-y-auto flex flex-col p-1">
-          {songs
-            .filter((s) => !currentSongs.includes(s.id))
-            .map((s) => {
+          {(songsData || [])
+            .filter((s: Song) => !currentSongs.includes(s.id))
+            .map((s: Song) => {
               return (
                 <div
                   onClick={() => onSongAdd(s.id)}

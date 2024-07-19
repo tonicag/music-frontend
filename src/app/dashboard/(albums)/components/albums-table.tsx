@@ -44,9 +44,6 @@ export function AlbumsTable() {
               {data.songs.map((s) => (
                 <Badge key={s.id}>{s.name}</Badge>
               ))}
-              {data.songs.map((s) => (
-                <Badge key={s.id}>{s.name}</Badge>
-              ))}
             </div>
           );
         },

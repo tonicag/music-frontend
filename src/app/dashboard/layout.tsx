@@ -4,6 +4,9 @@ import { ReactNode, useEffect, useState } from "react";
 import useAuthStore from "@/stores/auth.store";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/app/dashboard/sidebar/sidebar";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export default function Page({ children }: { children: ReactNode }) {
   const { ready, isLoggedIn } = useAuthStore();
@@ -20,11 +23,13 @@ export default function Page({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen flex bg-white">
-      <div className="w-[240px] h-ful bg-gray-100">
-        <Sidebar />
+    <QueryClientProvider client={queryClient}>
+      <div className="min-h-screen flex bg-white">
+        <div className="w-[240px] h-ful bg-gray-100">
+          <Sidebar />
+        </div>
+        <div className="flex-1 flex-shrink-0 p-4">{children}</div>
       </div>
-      <div className="flex-1 flex-shrink-0 p-4">{children}</div>
-    </div>
+    </QueryClientProvider>
   );
 }
