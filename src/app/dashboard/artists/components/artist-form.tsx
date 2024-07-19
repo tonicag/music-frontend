@@ -15,16 +15,22 @@ export type ArtistFormProps = {
   children?: ReactNode;
 };
 
-const formSchema = z.object({});
+const formSchema = z.object({
+  id: z.number().nullish(),
+  name: z.string().min(1, { message: "This field is required!" }),
+});
 
 export type EditArtistFormSchema = z.infer<typeof formSchema>;
 
 export default function ArtistForm({ children }: ArtistFormProps) {
-  const { onSubmit, data: song } = useDrawerTableContext();
+  const { onSubmit, data: artist } = useDrawerTableContext();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {},
+    defaultValues: {
+      id: artist?.id || null,
+      name: artist?.name || "",
+    },
   });
 
   return (
@@ -33,6 +39,7 @@ export default function ArtistForm({ children }: ArtistFormProps) {
       onSubmit={(values) => onSubmit?.(values)}
       className="p-4 h-full flex flex-col"
     >
+      <FormInput name="name" placeholder="Enter name" label="Name" />
       <div className="!mt-auto">
         <DrawerFooter className={"flex flex-row justify-center"}>
           <Button
