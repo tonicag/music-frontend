@@ -12,7 +12,7 @@ export default function RegisterPage() {
           Sound<span className="font-thin text-gray-500">zzz</span>
         </h1>
         <h1 className="font-thin text-lg">
-          Join now and let's get started building your music library!
+          Join now and lets get started building your music library!
         </h1>
       </div>
     </div>

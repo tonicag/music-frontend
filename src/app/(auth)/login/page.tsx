@@ -11,7 +11,7 @@ export default function LoginPage() {
           Sound<span className="font-thin text-gray-500">zzz</span>
         </h1>
         <h1 className="font-thin text-lg">
-          Login and let's get started building your music library!
+          Login and lets get started building your music library!
         </h1>
       </div>
     </div>
