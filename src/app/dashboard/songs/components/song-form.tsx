@@ -4,17 +4,8 @@ import FormWrapper from "@/components/form-wrapper";
 import SelectComponent from "@/components/select-component";
 import { Button } from "@/components/ui/button";
 import { DrawerClose, DrawerFooter } from "@/components/ui/drawer";
-import { FormControl } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Artist } from "@/types/artist/artist-types";
-import { Song } from "@/types/song/song-types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { ReactNode, useEffect, useState } from "react";
@@ -57,7 +48,8 @@ export default function SongForm({ children }: SongFormProps) {
     axios.get("http://localhost:8000/artists").then(({ data }) => {
       console.log({ data });
       setArtists(
-        data?.data.map((d: Artist) => ({ value: d.id, label: d.name })) || []
+        data?.data?.data.map((d: Artist) => ({ value: d.id, label: d.name })) ||
+          []
       );
     });
   }, []);

@@ -28,7 +28,7 @@ export default function Sidebar() {
         </Link>
         <Link
           className="px-4 py-2 flex items-center gap-2 hover:bg-gray-200 rounded-lg text-sm text-gray-500 font-normal"
-          href={"/dashboard"}
+          href={"/dashboard/artists"}
         >
           <UserIcon className="stroke-pink-300" />
           Artists

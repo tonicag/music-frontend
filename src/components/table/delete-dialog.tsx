@@ -10,6 +10,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { ReactNode } from "react";
+
 type DeleteDialogProps = {
   title?: string;
   description?: string;
@@ -17,6 +18,7 @@ type DeleteDialogProps = {
   className?: string;
   children: ReactNode;
 };
+
 export default function DeleteDialog({
   children,
   title,

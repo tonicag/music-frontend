@@ -1,10 +1,11 @@
 "use client";
-import DeleteDialog from "@/app/dashboard/songs/components/delete-dialog";
+
+import DrawerTableContextProvider from "@/app/dashboard/songs/contexts/DrawerTableContextProvider";
+import DeleteDialog from "@/components/table/delete-dialog";
 import {
   DrawerConfig,
   GenericTableDrawer,
-} from "@/app/dashboard/songs/components/edit-song-drawer";
-import DrawerTableContextProvider from "@/app/dashboard/songs/contexts/DrawerTableContextProvider";
+} from "@/components/table/generic-table-drawer";
 import { Button } from "@/components/ui/button";
 import { Song } from "@/types/song/song-types";
 import { CellClickedEvent, ColDef } from "ag-grid-community";
